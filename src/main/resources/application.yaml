@@ -1,3 +1,6 @@
 spring:
   application:
     name: projeto-integrador
+
+  flyway:
+    enabled: true
