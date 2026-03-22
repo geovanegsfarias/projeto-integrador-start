@@ -33,6 +33,14 @@ public class Reading {
     public Reading() {
     }
 
+    public Reading(double ambientTemp, double liquidTemp, double humidity, BeerStage stage, String deviceId) {
+        this.ambientTemp = ambientTemp;
+        this.liquidTemp = liquidTemp;
+        this.humidity = humidity;
+        this.stage = stage;
+        this.deviceId = deviceId;
+    }
+
     public Long getId() {
         return id;
     }
