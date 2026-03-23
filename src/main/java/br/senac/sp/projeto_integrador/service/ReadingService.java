@@ -3,19 +3,24 @@ package br.senac.sp.projeto_integrador.service;
 import br.senac.sp.projeto_integrador.dto.request.ReadingRequest;
 import br.senac.sp.projeto_integrador.dto.response.ReadingResponse;
 import br.senac.sp.projeto_integrador.mapper.ReadingMapper;
+import br.senac.sp.projeto_integrador.model.Alert;
+import br.senac.sp.projeto_integrador.model.Reading;
 import br.senac.sp.projeto_integrador.repository.ReadingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReadingService {
     private final ReadingRepository readingRepository;
+    private final AlertService alertService;
 
     @Autowired
-    public ReadingService(ReadingRepository readingRepository) {
+    public ReadingService(ReadingRepository readingRepository, AlertService alertService) {
         this.readingRepository = readingRepository;
+        this.alertService = alertService;
     }
 
     public List<ReadingResponse> getAll() {
@@ -31,7 +36,9 @@ public class ReadingService {
     }
 
     public ReadingResponse save(ReadingRequest request) {
-        return ReadingMapper.toReadingResponse(readingRepository.save(ReadingMapper.toReading(request)));
+        Reading reading = readingRepository.save(ReadingMapper.toReading(request));
+        alertService.checkThreshold(reading);
+        return ReadingMapper.toReadingResponse(reading);
     }
 
 }
