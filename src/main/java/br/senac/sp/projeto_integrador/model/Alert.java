@@ -46,6 +46,12 @@ public class Alert {
         this.threshold = threshold;
     }
 
+    public Alert(String type, AlertSeverity severity, String message) {
+        this.type = type;
+        this.severity = severity;
+        this.message = message;
+    }
+
     public Long getId() {
         return id;
     }

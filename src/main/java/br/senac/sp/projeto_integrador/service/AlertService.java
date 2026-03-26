@@ -8,19 +8,24 @@ import br.senac.sp.projeto_integrador.model.AlertSeverity;
 import br.senac.sp.projeto_integrador.model.BeerStage;
 import br.senac.sp.projeto_integrador.model.Reading;
 import br.senac.sp.projeto_integrador.repository.AlertRepository;
+import br.senac.sp.projeto_integrador.repository.ReadingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
 public class AlertService {
     private final AlertRepository alertRepository;
+    private final ReadingRepository readingRepository;
 
     @Autowired
-    public AlertService(AlertRepository alertRepository) {
+    public AlertService(AlertRepository alertRepository, ReadingRepository readingRepository) {
         this.alertRepository = alertRepository;
+        this.readingRepository = readingRepository;
     }
 
     public List<AlertResponse> getAll() {
@@ -61,6 +66,16 @@ public class AlertService {
                 alertRepository.save(new Alert(reading, "TEMP_OUT_OF_RANGE", AlertSeverity.WARNING, "Temperature above 5ºC", liquidTemp, 5));
             }
         }
+    }
+
+    @Scheduled(fixedRate = 60000)
+    public void checkLastRequestInterval() {
+        readingRepository.findTopByOrderByTimestampDesc().ifPresent(reading -> {
+            Duration interval = Duration.between(reading.getTimestamp(), OffsetDateTime.now());
+            if (interval.toSeconds() > 60) {
+                alertRepository.save(new Alert("SENSOR_FAIL", AlertSeverity.SENSOR_FAIL, "No readings for more than 60 seconds."));
+            }
+        });
     }
 
 }
