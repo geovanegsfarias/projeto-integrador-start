@@ -9,6 +9,8 @@ import br.senac.sp.projeto_integrador.model.BeerStage;
 import br.senac.sp.projeto_integrador.model.Reading;
 import br.senac.sp.projeto_integrador.repository.AlertRepository;
 import br.senac.sp.projeto_integrador.repository.ReadingRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.util.List;
 
 @Service
 public class AlertService {
+    private static final Logger logger = LoggerFactory.getLogger(AlertService.class);
     private final AlertRepository alertRepository;
     private final ReadingRepository readingRepository;
 
@@ -42,9 +45,21 @@ public class AlertService {
         return new AlertCountResponse(size);
     }
 
+    private boolean checkRange(BeerStage stage, double liquidTemp) {
+        if (stage == BeerStage.MASHING) {
+            return liquidTemp < 62 || liquidTemp > 72;
+        } else if (stage == BeerStage.BOILING) {
+            return liquidTemp < 95;
+        } else if (stage == BeerStage.FERMENTATION) {
+            return liquidTemp < 18 || liquidTemp > 24;
+        } else if (stage == BeerStage.MATURATION) {
+            return liquidTemp > 5;
+        }
+        return false;
+    }
+
     public void checkThreshold(Reading reading) {
         double liquidTemp = reading.getLiquidTemp();
-        // Verificação de Alerts de nível warning
         if (reading.getStage() == BeerStage.MASHING) { // Mínimo: 62 | Máximo: 72
             if (liquidTemp <= 60) { // alerta: 2 graus abaixo do mínimo
                 alertRepository.save(new Alert(reading, "TEMP_OUT_OF_RANGE", AlertSeverity.WARNING, "Temperature below 62ºC", liquidTemp, 62));
@@ -64,6 +79,24 @@ public class AlertService {
         } else if (reading.getStage() == BeerStage.MATURATION) { // Mínimo: 0 | Máximo: 5
             if (liquidTemp > 8) { //
                 alertRepository.save(new Alert(reading, "TEMP_OUT_OF_RANGE", AlertSeverity.WARNING, "Temperature above 5ºC", liquidTemp, 5));
+            }
+        }
+
+        if (checkRange(reading.getStage(), liquidTemp)) { // checando se a temperatura está fora da faixa por mais de 5 minutos para alerta crítico.
+            List<Reading> readings = readingRepository.findByStageOrderByTimestampDesc(reading.getStage());
+            OffsetDateTime readingTimestamp = reading.getTimestamp();
+
+            for(Reading r : readings) { // itera a lista de leituras na mesma fase
+                if (checkRange(r.getStage(), r.getLiquidTemp())) {
+                    readingTimestamp = r.getTimestamp(); // salva a data mais antiga onde a temperatura ficou fora de faixa
+                } else {
+                    break; // para quando achar uma leitura onde a temperatura estava dentro do esperado
+                }
+            }
+
+            Duration interval = Duration.between(readingTimestamp, reading.getTimestamp());
+            if (interval.toMinutes() >= 5) {
+                alertRepository.save(new Alert(reading, "TEMP_OUT_OF_RANGE", AlertSeverity.CRITICAL, "Temperature outside the range for 5 minutes or more.", liquidTemp, 0));
             }
         }
     }
