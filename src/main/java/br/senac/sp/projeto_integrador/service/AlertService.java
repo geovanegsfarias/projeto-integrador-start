@@ -24,6 +24,7 @@ public class AlertService {
     private static final Logger logger = LoggerFactory.getLogger(AlertService.class);
     private final AlertRepository alertRepository;
     private final ReadingRepository readingRepository;
+    private boolean sensorFailAlerted = false;
 
     @Autowired
     public AlertService(AlertRepository alertRepository, ReadingRepository readingRepository) {
@@ -106,7 +107,12 @@ public class AlertService {
         readingRepository.findTopByOrderByTimestampDesc().ifPresent(reading -> {
             Duration interval = Duration.between(reading.getTimestamp(), OffsetDateTime.now());
             if (interval.toSeconds() > 60) {
-                alertRepository.save(new Alert("SENSOR_FAIL", AlertSeverity.SENSOR_FAIL, "No readings for more than 60 seconds."));
+                if (!sensorFailAlerted) {
+                    alertRepository.save(new Alert(null, "SENSOR_FAIL", AlertSeverity.SENSOR_FAIL, "No readings for more than 60 seconds.", 0, 0));
+                    sensorFailAlerted = true;
+                }
+            } else {
+                sensorFailAlerted = false;
             }
         });
     }
