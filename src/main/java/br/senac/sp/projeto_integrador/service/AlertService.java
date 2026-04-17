@@ -36,14 +36,18 @@ public class AlertService {
         return alertRepository.findAll().stream().map(alert -> AlertMapper.toAlertResponse(alert)).toList();
     }
 
+    public AlertCountResponse getCount() {
+        return new AlertCountResponse(alertRepository.findAll().size());
+    }
+
     public List<AlertResponse> getRecent() {
         return alertRepository.findByCreatedAtAfterOrderByCreatedAtDesc(OffsetDateTime.now().minusHours(24))
                 .stream().map(alert -> AlertMapper.toAlertResponse(alert)).toList();
     }
 
     public AlertCountResponse getRecentCount() {
-        int size = alertRepository.findByCreatedAtAfterOrderByCreatedAtDesc(OffsetDateTime.now().minusHours(24)).size();
-        return new AlertCountResponse(size);
+        long count = alertRepository.countByCreatedAtAfter(OffsetDateTime.now().minusHours(24));
+        return new AlertCountResponse((int) count);
     }
 
     private boolean checkRange(BeerStage stage, double liquidTemp) {
@@ -63,23 +67,23 @@ public class AlertService {
         double liquidTemp = reading.getLiquidTemp();
         if (reading.getStage() == BeerStage.MASHING) { // Mínimo: 62 | Máximo: 72
             if (liquidTemp <= 60) { // alerta: 2 graus abaixo do mínimo
-                alertRepository.save(new Alert(reading, "TEMP_OUT_OF_RANGE", AlertSeverity.WARNING, "Temperature below 62ºC", liquidTemp, 62));
+                alertRepository.save(new Alert(reading, "TEMP_FORA_DA_FAIXA", AlertSeverity.WARNING, "Temperatura abaixo de 62ºC", liquidTemp, 62));
             } else if (liquidTemp >= 74) { // alerta: 2 graus acima do máximo
-                alertRepository.save(new Alert(reading, "TEMP_OUT_OF_RANGE", AlertSeverity.WARNING, "Temperature above 72ºC", liquidTemp, 72));
+                alertRepository.save(new Alert(reading, "TEMP_FORA_DA_FAIXA", AlertSeverity.WARNING, "Temperatura acima de 72ºC", liquidTemp, 72));
             }
         } else if (reading.getStage() == BeerStage.BOILING) { // Mínimo: 95 | Máximo: 100
             if (liquidTemp < 95) {
-                alertRepository.save(new Alert(reading, "TEMP_OUT_OF_RANGE", AlertSeverity.WARNING, "Temperature below 95ºC", liquidTemp, 95));
+                alertRepository.save(new Alert(reading, "TEMP_FORA_DA_FAIXA", AlertSeverity.WARNING, "Temperatura abaixo de 95ºC", liquidTemp, 95));
             }
         } else if (reading.getStage() == BeerStage.FERMENTATION) { // Mínimo: 18 | Máximo: 24
             if (liquidTemp <= 15) { // alerta: 3 graus abaixo do mínimo
-                alertRepository.save(new Alert(reading, "TEMP_OUT_OF_RANGE", AlertSeverity.WARNING, "Temperature below 18ºC", liquidTemp, 18));
+                alertRepository.save(new Alert(reading, "TEMP_FORA_DA_FAIXA", AlertSeverity.WARNING, "Temperatura abaixo de 18ºC", liquidTemp, 18));
             } else if (liquidTemp >= 27) { // alerta: 3 graus acima do máximo
-                alertRepository.save(new Alert(reading, "TEMP_OUT_OF_RANGE", AlertSeverity.WARNING, "Temperature above 24ºC", liquidTemp, 24));
+                alertRepository.save(new Alert(reading, "TEMP_FORA_DA_FAIXA", AlertSeverity.WARNING, "Temperatura acima de 24ºC", liquidTemp, 24));
             }
         } else if (reading.getStage() == BeerStage.MATURATION) { // Mínimo: 0 | Máximo: 5
             if (liquidTemp > 8) { //
-                alertRepository.save(new Alert(reading, "TEMP_OUT_OF_RANGE", AlertSeverity.WARNING, "Temperature above 5ºC", liquidTemp, 5));
+                alertRepository.save(new Alert(reading, "TEMP_FORA_DA_FAIXA", AlertSeverity.WARNING, "Temperatura acima de 5ºC", liquidTemp, 5));
             }
         }
 
@@ -97,7 +101,7 @@ public class AlertService {
 
             Duration interval = Duration.between(readingTimestamp, reading.getTimestamp());
             if (interval.toMinutes() >= 5) {
-                alertRepository.save(new Alert(reading, "TEMP_OUT_OF_RANGE", AlertSeverity.CRITICAL, "Temperature outside the range for 5 minutes or more.", liquidTemp, 0));
+                alertRepository.save(new Alert(reading, "TEMP_FORA_DA_FAIXA", AlertSeverity.CRITICAL, "Temperatura fora da faixa ideal por 5 minutos ou mais.", liquidTemp, 0));
             }
         }
     }
@@ -108,7 +112,7 @@ public class AlertService {
             Duration interval = Duration.between(reading.getTimestamp(), OffsetDateTime.now());
             if (interval.toSeconds() > 60) {
                 if (!sensorFailAlerted) {
-                    alertRepository.save(new Alert(null, "SENSOR_FAIL", AlertSeverity.SENSOR_FAIL, "No readings for more than 60 seconds.", 0, 0));
+                    alertRepository.save(new Alert(null, "SENSOR_FAIL", AlertSeverity.SENSOR_FAIL, "Nenhuma leitura por mais de 60 segundos.", 0, 0));
                     sensorFailAlerted = true;
                 }
             } else {

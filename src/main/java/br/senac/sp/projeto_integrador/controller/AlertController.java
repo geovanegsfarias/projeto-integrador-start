@@ -26,6 +26,11 @@ public class AlertController {
         return ResponseEntity.ok(alertService.getAll());
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<AlertCountResponse> getAlertsCount() {
+        return ResponseEntity.ok(alertService.getCount());
+    }
+
     @GetMapping("/recent")
     public ResponseEntity<List<AlertResponse>> getRecentAlerts() {
         return ResponseEntity.ok(alertService.getRecent());

@@ -1,10 +1,10 @@
 package br.senac.sp.projeto_integrador.model;
 
 public enum AlertSeverity {
-    INFO("Info"),
-    WARNING("Warning"),
-    CRITICAL("Critical"),
-    SENSOR_FAIL("Sensor Fail");
+    INFO("INFO"),
+    WARNING("AVISO"),
+    CRITICAL("CRÍTICO"),
+    SENSOR_FAIL("ERRO NO SENSOR");
 
     private String severity;
 

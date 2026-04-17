@@ -8,7 +8,7 @@ public class AlertMapper {
     public static AlertResponse toAlertResponse(Alert alert) {
         return new AlertResponse(
                 alert.getId(),
-                alert.getReading().getId(),
+                (alert.getReading() != null) ? alert.getReading().getId() : null,
                 alert.getType(),
                 alert.getSeverity(),
                 alert.getMessage(),
