@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Login | Start Cervejaria</title>
+    <link rel="stylesheet" href="styles/admin-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="loginb">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h2>Start Admin</h2>
+                <p>Área de Monitoramento do Processo de Produção</p>
+            </div>
+            <form action="/login" method="POST">
+                <div class="input-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="login-btn">Entrar</button>
+            </form>
+            <div id="loginMessage" class="message"></div>
+        </div>
+    </div>
+</body>
+</html>

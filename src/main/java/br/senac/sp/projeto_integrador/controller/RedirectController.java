@@ -11,4 +11,14 @@ public class RedirectController {
         return "forward:/dashboard.html";
     }
 
+    @GetMapping("/login")
+    public String login() {
+        return "forward:/login.html";
+    }
+
+    @GetMapping
+    public String index() {
+        return "forward:/index.html";
+    }
+
 }

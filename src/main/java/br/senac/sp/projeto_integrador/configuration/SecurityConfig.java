@@ -18,13 +18,13 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/", "/login", "/css/**", "/js/**").permitAll()
-                                .requestMatchers("/dashboard", "/dashboard/**").hasRole("ADMIN")
+                                .requestMatchers("/", "/index.html", "/login", "/login.html", "/styles/**", "/js/**", "/img/**").permitAll()
+                                .requestMatchers("/dashboard", "/dashboard/**", "/dashboard.html").hasRole("ADMIN")
                                 .requestMatchers("/api/readings/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-//                        .loginPage("/login")
+                        .loginPage("/login")
                         .defaultSuccessUrl("/dashboard", true)
                         .permitAll()
                 )
