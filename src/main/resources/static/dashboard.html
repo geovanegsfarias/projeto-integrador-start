@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto Cervejeiro 2026</title>
+    <link rel="stylesheet" href="styles/dashboard.css">
+    <link rel="shortcut icon" href="img/logo.jpeg" type="image/x-icon">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+<header class="header">
+    <div>
+        <span>🍺 Projeto Cervejeiro 2026 — Painel de Controle - Etapa: <span id="stage-nome">—</span></span>
+    </div>
+</header>
+
+<main class="main">
+
+    <section class="primeira-linha">
+        <div class="metric-card">
+            <span class="topico">Temperatura do líquido</span>
+            <span class="valor" id="kpi-liquid">—</span>
+        </div>
+        <div class="metric-card">
+            <span class="topico">Temperatura ambiente</span>
+            <span class="valor" id="kpi-ambient">—</span>
+        </div>
+        <div class="metric-card">
+            <span class="topico">Umidade</span>
+            <span class="valor" id="kpi-humidity">—</span>
+        </div>
+        <div class="metric-card">
+            <span class="topico">Alertas totais</span>
+            <span class="valor" id="kpi-alerts-total">—</span>
+        </div>
+    </section>
+
+    <section class="segunda-linha">
+        <div class="footer-item">
+            <span class="topico">Desvio padrão</span>
+            <span class="valor" id="kpi-std">—</span>
+        </div>
+        <div class="footer-item">
+            <span class="topico">Conformidade</span>
+            <span class="valor" id="kpi-conformidade">—</span>
+        </div>
+        <div class="footer-item">
+            <span class="topico">Consumo de energia</span>
+            <span class="valor" id="kpi-energia">—</span>
+        </div>
+        <div class="footer-item">
+            <span class="topico">Alertas nas últimas 24h</span>
+            <span class="valor" id="kpi-alerts-24h">—</span>
+        </div>
+    </section>
+
+    <section class="alinhamento-grafico">
+
+        <div class="grafico-alerta">
+            <span class="titulo-grafico">Variação da temperatura líquida e ambiente</span>
+            <div class="chart-container">
+                <canvas id="chart-historico"></canvas>
+            </div>
+            <div class="legenda">
+                <span><i class="indice liquido"></i> Líquido °C</span>
+                <span><i class="indice ambiente"></i> Ambiente °C</span>
+            </div>
+        </div>
+
+        <div class="grafico-alerta">
+            <span class="titulo-grafico" id="alertas-titulo">Alertas recentes</span>
+            <div class="alerta-lista" id="alerts-list">
+                <div class="alerta-carregando">Carregando alertas...</div>
+            </div>
+        </div>
+
+        <div class="grafico-alerta">
+            <span class="titulo-grafico">Temperatura média por etapa</span>
+            <div class="chart-container">
+                <canvas id="chart-etapa"></canvas>
+            </div>
+        </div>
+
+        <div class="grafico-alerta">
+            <span class="titulo-grafico">Quantidade de alertas por gravidade</span>
+            <div class="chart-container">
+                <canvas id="chart-severidade"></canvas>
+            </div>
+        </div>
+
+    </section>
+
+    <section>
+        <div class="grafico-alerta">
+            <span class="titulo-grafico">Duração total de cada etapa</span>
+            <div class="chart-container chart-container--wide">
+                <canvas id="chart-duracao"></canvas>
+            </div>
+            <div class="legenda">
+                <span><i class="indice real"></i> Tempo total gasto</span>
+                <span><i class="indice planejado"></i> Tempo planejado</span>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<script src="scripts/dashboard.js"></script>
+</body>
+</html>
