@@ -18,4 +18,4 @@ spring:
 mqtt:
   broker:
     url: ${MQTT_BROKER_URL:tcp://localhost:1883}
-  topic: ${MQTT_TOPIC:cerveja/temp_liq}
+  topic: ${MQTT_TOPIC:cerveja/dados}
