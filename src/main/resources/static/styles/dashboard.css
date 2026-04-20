@@ -1,110 +1,179 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap');
 
 :root {
-    --fonte-texto: 'Nunito', sans-serif;
-    --fonte-titulo: "Poppins", sans-serif;
-    --cor-header: #1b4332;
-    --cor-alerta: #555;
-    --cor-grafico-texto: #777;
+    --fonte-texto:  'Nunito', sans-serif;
+    --fonte-titulo: 'Montserrat', sans-serif;
+
+    --ouro:         #DEB75B;
+    --ouro-dim:     #BF9341;
+    --verde-header: #013824;
+    --verde-borda:  #2d6a4f;
+
     --cor-informacao: #3498db;
-    --cor-aviso: #e67e22;
-    --cor-perigo: #d00;
-    --cor-fundo-pagina: #2b5f326b;
-    --cor-borda-alerta: #3a7e45;
-    --cor-fundo-grafico-alerta: rgba(245, 250, 245, 0.658);
-    --cor-fundo-titulo: rgba(184, 201, 184, 0.658);
-    --cor-real: #1b4332;
-    --cor-planejado: #3a7e45;
+    --cor-aviso:      #e67e22;
+    --cor-perigo:     #c0392b;
+
+    --card-bg:       rgba(10, 30, 18, 0.55);
+    --card-borda:    rgba(45, 106, 79, 0.5);
+    --titulo-bg:     rgba(1, 56, 36, 0.4);
 }
 
-/* ── BASE ── */
 *, *::before, *::after { box-sizing: border-box; }
 
 body {
     margin: 0;
     padding: 0;
-    background-image: linear-gradient(to bottom, #2b5f3285, #2b5f32c7);
-    color: #333;
+    background: linear-gradient(160deg, #0d1f14 0%, #1a3a25 50%, #0f2918 100%);
+    min-height: 100vh;
+    color: #e8f0eb;
+    font-family: var(--fonte-texto);
 }
 
 /* ── HEADER ── */
 .header {
-    background-color: var(--cor-header);
+    background: rgba(1, 56, 36, 0.92);
+    border-bottom: 1px solid rgba(222, 183, 91, 0.25);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header > div:first-child span {
     font-family: var(--fonte-titulo);
-    color: white;
-    padding: 15px 30px;
-    font-size: 1.1em;
-    font-weight: bold;
-    text-align: center;
+    font-size: 1em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--ouro);
+}
+
+.header-stage {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--fonte-titulo);
+    font-size: 0.8em;
+    font-weight: 500;
+    color: rgba(255,255,255,0.6);
+}
+
+.header-stage select {
+    background: rgba(222, 183, 91, 0.1);
+    color: var(--ouro);
+    border: 1px solid rgba(222, 183, 91, 0.35);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-family: var(--fonte-titulo);
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.header-stage select:hover {
+    background: rgba(222, 183, 91, 0.18);
+    border-color: var(--ouro-dim);
+}
+
+.header-stage select option {
+    background: #013824;
+    color: #fff;
 }
 
 /* ── MAIN ── */
 .main {
     max-width: 1300px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 22px 20px;
 }
 
 /* ── MÉTRICAS ── */
 .primeira-linha {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    margin-bottom: 25px;
-    text-align: center;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
 .segunda-linha {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.metric-card,
+.footer-item {
+    background: var(--card-bg);
+    border: 1px solid var(--card-borda);
+    border-radius: 10px;
+    padding: 14px 12px;
     text-align: center;
-    padding-top: 0;
-    margin-bottom: 15px;
+    backdrop-filter: blur(6px);
+    transition: border-color 0.25s;
+}
+
+.metric-card:hover,
+.footer-item:hover {
+    border-color: rgba(222, 183, 91, 0.4);
 }
 
 .topico {
-    font-size: 18px;
     font-family: var(--fonte-titulo);
-    color: var(--cor-alerta);
-    margin-bottom: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(222, 183, 91, 0.7);
+    margin-bottom: 6px;
     display: block;
 }
 
 .valor {
     font-family: var(--fonte-texto);
-    font-size: 23px;
-    font-weight: bold;
+    font-size: 22px;
+    font-weight: 800;
+    color: #e8f0eb;
 }
 
 /* ── GRID GRÁFICOS ── */
 .alinhamento-grafico {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-auto-rows: 1fr;
     gap: 10px;
     margin-bottom: 10px;
 }
 
-/* ── CARD GRÁFICO / ALERTA ── */
+/* ── CARD GRÁFICO ── */
 .grafico-alerta {
-    background: var(--cor-fundo-grafico-alerta);
-    border-radius: 5px;
-    padding: 15px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-borda);
+    border-radius: 10px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
+    backdrop-filter: blur(6px);
 }
 
 .titulo-grafico {
-    background-color: var(--cor-fundo-titulo);
     font-family: var(--fonte-titulo);
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 15px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ouro);
+    margin-bottom: 14px;
     display: block;
-    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(45, 106, 79, 0.6);
 }
 
-/* ── CANVAS CONTAINERS ── */
+/* ── CANVAS ── */
 .chart-container {
     position: relative;
     flex-grow: 1;
@@ -121,68 +190,68 @@ body {
     display: flex;
     justify-content: center;
     gap: 20px;
-    font-size: 12px;
-    margin-top: 8px;
+    font-size: 11px;
+    color: rgba(232, 240, 235, 0.6);
+    margin-top: 10px;
 }
 
 .indice {
     display: inline-block;
     width: 12px;
-    height: 4px;
+    height: 3px;
     margin-right: 5px;
     vertical-align: middle;
+    border-radius: 2px;
 }
 
-.liquido    { background: #3498db; }
-.ambiente   { background: #e67e22; }
-.real       { background: var(--cor-real); }
-.planejado  { background: var(--cor-planejado); }
+.liquido   { background: #3498db; }
+.ambiente  { background: #e67e22; }
+.real      { background: var(--ouro); }
+.planejado { background: #2d6a4f; }
 
 /* ── LISTA DE ALERTAS ── */
 .alerta-lista {
     flex-grow: 1;
     overflow-y: auto;
     max-height: 340px;
-    background: var(--cor-fundo-grafico-alerta);
-    border: 1px solid var(--cor-borda-alerta);
-    padding-right: 5px;
 }
 
 .alerta-carregando {
     font-family: var(--fonte-texto);
-    color: var(--cor-grafico-texto);
+    color: rgba(232,240,235,0.4);
     padding: 20px;
     text-align: center;
+    font-size: 0.9rem;
 }
 
 .alerta-item {
     font-family: var(--fonte-texto);
-    padding: 10px;
-    font-size: 15px;
-    border-bottom: 1px solid var(--cor-borda-alerta);
+    padding: 9px 6px;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(45, 106, 79, 0.35);
     display: flex;
     align-items: center;
     gap: 10px;
+    transition: background 0.2s;
 }
 
 .alerta-item:hover {
-    background-color: rgba(173, 201, 173, 0.658);
-    transition: 0.42s ease;
+    background: rgba(45, 106, 79, 0.2);
 }
 
-/* Hora do alerta */
 .alerta-hora {
-    font-weight: bold;
+    font-weight: 700;
     white-space: nowrap;
     min-width: 38px;
+    font-size: 12px;
+    color: rgba(232,240,235,0.5);
 }
 
-/* Badge de tipo */
 .alerta-tipo {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.05em;
-    padding: 2px 7px;
+    letter-spacing: 0.06em;
+    padding: 2px 6px;
     border-radius: 3px;
     white-space: nowrap;
     text-transform: uppercase;
@@ -190,10 +259,10 @@ body {
 
 .alerta-mensagem {
     margin: 0;
-    color: #333;
+    color: rgba(232, 240, 235, 0.8);
+    font-size: 12px;
 }
 
-/* Cores por severidade — hora e badge */
 .sev-WARNING  .alerta-hora,
 .sev-WARNING  .alerta-tipo  { color: var(--cor-aviso); }
 
@@ -204,17 +273,15 @@ body {
 .sev-INFO     .alerta-tipo  { color: var(--cor-informacao); }
 
 .sev-SENSOR_FAIL .alerta-hora,
-.sev-SENSOR_FAIL .alerta-tipo { color: #777; }
+.sev-SENSOR_FAIL .alerta-tipo { color: rgba(232,240,235,0.35); }
 
 /* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--cor-borda-alerta); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: rgba(45,106,79,0.6); border-radius: 2px; }
 
-/* ── MISC ── */
 p { margin: 0; padding: 0; }
 
-/* ── RESPONSIVE ── */
 @media (max-width: 900px) {
     .alinhamento-grafico { grid-template-columns: 1fr; }
     .primeira-linha,

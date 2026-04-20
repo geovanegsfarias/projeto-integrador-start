@@ -11,7 +11,16 @@
 <body>
 <header class="header">
     <div>
-        <span>🍺 Projeto Cervejeiro 2026 — Painel de Controle - Etapa: <span id="stage-nome">—</span></span>
+        <span>🍺 Projeto Cervejeiro 2026 — Painel de Controle</span>
+    </div>
+    <div class="header-stage">
+        <label for="stage-select">Etapa:</label>
+        <select id="stage-select" onchange="mudarEtapa(this.value)">
+            <option value="MASHING">Mostura</option>
+            <option value="BOILING">Fervura</option>
+            <option value="FERMENTATION">Fermentação</option>
+            <option value="MATURATION">Maturação</option>
+        </select>
     </div>
 </header>
 
@@ -58,13 +67,9 @@
     <section class="alinhamento-grafico">
 
         <div class="grafico-alerta">
-            <span class="titulo-grafico">Variação da temperatura líquida e ambiente</span>
+            <span class="titulo-grafico">Quantidade de alertas por gravidade</span>
             <div class="chart-container">
-                <canvas id="chart-historico"></canvas>
-            </div>
-            <div class="legenda">
-                <span><i class="indice liquido"></i> Líquido °C</span>
-                <span><i class="indice ambiente"></i> Ambiente °C</span>
+                <canvas id="chart-severidade"></canvas>
             </div>
         </div>
 
@@ -83,9 +88,13 @@
         </div>
 
         <div class="grafico-alerta">
-            <span class="titulo-grafico">Quantidade de alertas por gravidade</span>
+            <span class="titulo-grafico">Duração total de cada etapa</span>
             <div class="chart-container">
-                <canvas id="chart-severidade"></canvas>
+                <canvas id="chart-duracao"></canvas>
+            </div>
+            <div class="legenda">
+                <span><i class="indice real"></i> Tempo total gasto</span>
+                <span><i class="indice planejado"></i> Tempo planejado</span>
             </div>
         </div>
 
@@ -93,13 +102,13 @@
 
     <section>
         <div class="grafico-alerta">
-            <span class="titulo-grafico">Duração total de cada etapa</span>
+            <span class="titulo-grafico">Variação da temperatura líquida e ambiente</span>
             <div class="chart-container chart-container--wide">
-                <canvas id="chart-duracao"></canvas>
+                <canvas id="chart-historico"></canvas>
             </div>
             <div class="legenda">
-                <span><i class="indice real"></i> Tempo total gasto</span>
-                <span><i class="indice planejado"></i> Tempo planejado</span>
+                <span><i class="indice liquido"></i> Líquido °C</span>
+                <span><i class="indice ambiente"></i> Ambiente °C</span>
             </div>
         </div>
     </section>

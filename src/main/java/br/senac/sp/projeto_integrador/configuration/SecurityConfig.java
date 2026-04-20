@@ -21,6 +21,9 @@ public class SecurityConfig {
                                 .requestMatchers("/", "/index.html", "/login", "/login.html", "/styles/**", "/js/**", "/img/**").permitAll()
                                 .requestMatchers("/dashboard", "/dashboard/**", "/dashboard.html").hasRole("ADMIN")
                                 .requestMatchers("/api/readings/**").permitAll()
+                                .requestMatchers("/api/alerts/**").permitAll()
+                                .requestMatchers("/api/kpis/**").permitAll()
+                                .requestMatchers("/api/stage").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

@@ -12,18 +12,16 @@ import java.util.Optional;
 @Repository
 public interface ReadingRepository extends JpaRepository<Reading, Long> {
 
-    // Existentes
     Optional<Reading> findTopByOrderByTimestampDesc();
     List<Reading> findByStageOrderByTimestampDesc(BeerStage stage);
 
-    // Média e desvio padrão — calculados no banco
     @Query("SELECT r.stage, AVG(r.liquidTemp) FROM Reading r GROUP BY r.stage")
     List<Object[]> findAvgLiquidTempByStage();
 
     @Query(value = "SELECT STDDEV(liquid_temp)::float8 FROM readings", nativeQuery = true)
     Double findDesvioPadrao();
 
-    // Conformidade — percentual calculado inteiramente no banco
+    // Conformidade
     @Query(value = """
             SELECT
               COUNT(CASE
@@ -36,16 +34,13 @@ public interface ReadingRepository extends JpaRepository<Reading, Long> {
             """, nativeQuery = true)
     Double findConformidadePercentual();
 
-    // Duração por etapa — usada para energia e gráfico real vs planejado
+    // Duração por etapa
     @Query("SELECT r.stage, MIN(r.timestamp), MAX(r.timestamp) FROM Reading r GROUP BY r.stage")
     List<Object[]> findDuracaoPorEtapa();
 
-    // Gráfico de linha 24h: média por janela de 4h no fuso de São Paulo
-    // Agrupa no banco — evita carregar milhares de registros brutos
-    // EXTRACT retorna 0,4,8,12,16,20 representando o início de cada janela
     @Query(value = """
             SELECT
-              (EXTRACT(HOUR FROM timestamp AT TIME ZONE 'America/Sao_Paulo')::int / 4) * 4 AS janela,
+              EXTRACT(HOUR FROM timestamp AT TIME ZONE 'America/Sao_Paulo')::int AS janela,
               AVG(liquid_temp)  AS media_liquid,
               AVG(ambient_temp) AS media_ambient
             FROM readings

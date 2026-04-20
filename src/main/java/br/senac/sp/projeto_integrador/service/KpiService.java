@@ -18,21 +18,17 @@ public class KpiService {
     private final ReadingRepository readingRepository;
     private final AlertRepository alertRepository;
 
+    // Potência do forno: P = V * I = 220V, P = 1000W = 1kW
+    // Fórmula: E = P * T  →  kWh = 1.0 kW × horas ligado
+    private static final double POTENCIA_KW = 1.0;
+
     // Range planejado por etapa [minutos_min, minutos_max]
-    // Mashing: 60min fixo | Boiling: 60-90min | Fermentation: 7-14 dias | Maturation: 14-30 dias
+    // Mashing: 60min | Boiling: 60-90min | Fermentation: 7-14 dias | Maturation: 14-30 dias
     private static final Map<BeerStage, long[]> DURACAO_PLANEJADA = Map.of(
             BeerStage.MASHING,      new long[]{ 60L,    60L    },
             BeerStage.BOILING,      new long[]{ 60L,    90L    },
             BeerStage.FERMENTATION, new long[]{ 10080L, 20160L },
             BeerStage.MATURATION,   new long[]{ 20160L, 43200L }
-    );
-
-    // Potência estimada por etapa (kW) — sem sensor de energia é uma aproximação
-    private static final Map<BeerStage, Double> POTENCIA_KW = Map.of(
-            BeerStage.MASHING,      3.5,
-            BeerStage.BOILING,      5.0,
-            BeerStage.FERMENTATION, 1.5,
-            BeerStage.MATURATION,   0.8
     );
 
     @Autowired
@@ -58,24 +54,22 @@ public class KpiService {
     }
 
     // -------------------------------------------------------------------------
-    // Energia — potência estimada × horas por etapa
-    // kWh = kW × h : cálculo correto para a unidade pedida
+    // Energia — E = P × T, com P = 1kW (forno 220V / 1000W)
+    // Soma o tempo total de todas as etapas com leituras registradas
     // -------------------------------------------------------------------------
     public EnergiaKpiResponse getEnergia() {
-        double totalKwh = 0;
+        double totalHoras = 0;
         for (Object[] row : readingRepository.findDuracaoPorEtapa()) {
-            BeerStage stage    = (BeerStage) row[0];
             OffsetDateTime min = (OffsetDateTime) row[1];
             OffsetDateTime max = (OffsetDateTime) row[2];
-            double horas = Duration.between(min, max).toMinutes() / 60.0;
-            totalKwh += POTENCIA_KW.getOrDefault(stage, 0.0) * horas;
+            totalHoras += Duration.between(min, max).toMinutes() / 60.0;
         }
-        return new EnergiaKpiResponse(totalKwh);
+        return new EnergiaKpiResponse(POTENCIA_KW * totalHoras);
     }
 
     // -------------------------------------------------------------------------
-    // Gráfico de linha 24h — 6 janelas de 4h, média calculada no banco
-    // Sempre retorna as 6 janelas; janelas sem dados chegam com null
+    // Gráfico de linha 24h — janelas de 1h (0..23), banco agrega a média
+    // Sempre retorna as 24 horas; horas sem dados chegam com null
     // -------------------------------------------------------------------------
     public List<TemperaturaAgregadaResponse> getHistoricoTemperatura() {
         Map<Integer, Object[]> porJanela = new HashMap<>();
@@ -85,7 +79,7 @@ public class KpiService {
         }
 
         List<TemperaturaAgregadaResponse> resultado = new ArrayList<>();
-        for (int h = 0; h < 24; h += 4) {
+        for (int h = 0; h < 24; h++) {
             String label = String.format("%02dh", h);
             Object[] row = porJanela.get(h);
             if (row != null) {
@@ -120,7 +114,7 @@ public class KpiService {
 
     // -------------------------------------------------------------------------
     // Gráfico de colunas — alertas por severidade
-    // Uma query GROUP BY no banco ao invés de 4 chamadas separadas
+    // Uma query GROUP BY no banco ao invés de chamadas separadas
     // -------------------------------------------------------------------------
     public AlertasKpiResponse getAlertasPorSeveridade() {
         Map<AlertSeverity, Long> counts = new EnumMap<>(AlertSeverity.class);

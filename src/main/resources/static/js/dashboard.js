@@ -7,35 +7,35 @@ const REFRESH_MS  = 10000;
 // ─────────────────────────────────────────────────────────
 // CHART.JS — DEFAULTS (segue a paleta da página)
 // ─────────────────────────────────────────────────────────
-Chart.defaults.color      = '#777';
-Chart.defaults.font.family = "'Nunito', sans-serif";
+Chart.defaults.color      = 'rgba(232,240,235,0.55)';
+Chart.defaults.font.family = "'Montserrat', sans-serif";
 Chart.defaults.font.size   = 12;
 
 // Cores base do design
 const COR_LIQUIDO   = '#3498db';
 const COR_AMBIENTE  = '#e67e22';
-const COR_REAL      = '#1b4332';
-const COR_PLANEJADO = '#3a7e45';
+const COR_REAL      = '#DEB75B';
+const COR_PLANEJADO = '#2d6a4f';
 const COR_INFO      = '#3498db';
 const COR_AVISO     = '#e67e22';
 const COR_PERIGO    = '#d00000';
 const COR_SENSOR    = '#999';
-const COR_GRADE     = 'rgba(51, 51, 51, 0.15)';
+const COR_GRADE     = 'rgba(45,106,79,0.25)';
 
 // Escala padrão para todos os gráficos
 function escalasPadrao(labelY = '') {
     return {
         x: {
             grid:  { color: COR_GRADE },
-            ticks: { color: '#777' }
+            ticks: { color: 'rgba(232,240,235,0.45)' }
         },
         y: {
             grid:  { color: COR_GRADE },
-            ticks: { color: '#777' },
+            ticks: { color: 'rgba(232,240,235,0.45)' },
             title: {
                 display: !!labelY,
                 text: labelY,
-                color: '#777',
+                color: 'rgba(232,240,235,0.45)',
                 font: { size: 11 }
             }
         }
@@ -95,20 +95,22 @@ let chartHistorico, chartEtapa, chartSeveridade, chartDuracao;
 
 function criarGraficos() {
 
-    // 1. Linha — temperatura 24h
+    // 1. Linha — temperatura 24h (janelas de 1h)
+    const labelsHoras = Array.from({length: 24}, (_, i) => String(i).padStart(2, '0') + 'h');
+
     chartHistorico = new Chart(
         document.getElementById('chart-historico').getContext('2d'),
         {
             type: 'line',
             data: {
-                labels: ['00h', '04h', '08h', '12h', '16h', '20h', '24h'],
+                labels: labelsHoras,
                 datasets: [
                     {
                         label: 'Líquido °C',
-                        data: new Array(7).fill(null),
+                        data: new Array(24).fill(null),
                         borderColor: COR_LIQUIDO,
-                        borderWidth: 2.5,
-                        pointRadius: 4,
+                        borderWidth: 2,
+                        pointRadius: 2,
                         pointBackgroundColor: COR_LIQUIDO,
                         tension: 0.35,
                         fill: false,
@@ -116,10 +118,10 @@ function criarGraficos() {
                     },
                     {
                         label: 'Ambiente °C',
-                        data: new Array(7).fill(null),
+                        data: new Array(24).fill(null),
                         borderColor: COR_AMBIENTE,
-                        borderWidth: 2.5,
-                        pointRadius: 4,
+                        borderWidth: 2,
+                        pointRadius: 2,
                         pointBackgroundColor: COR_AMBIENTE,
                         tension: 0.35,
                         fill: false,
@@ -147,7 +149,6 @@ function criarGraficos() {
                     label: 'Média em celsius',
                     data: [null, null, null, null],
                     backgroundColor: ['#1b4332', '#3a7e45', '#3498db', '#e67e22'],
-                    borderColor: [COR_REAL, COR_PLANEJADO, COR_LIQUIDO, COR_AMBIENTE],
                     borderWidth: 1.5,
                     borderRadius: 3
                 }]
@@ -172,8 +173,6 @@ function criarGraficos() {
                     label: 'Qtd.',
                     data: [0, 0, 0],
                     backgroundColor: ['#e67e22', '#dd0000', '#999999'],
-                    borderColor: [COR_AVISO, COR_PERIGO, COR_SENSOR],
-                    borderWidth: 1.5,
                     borderRadius: 3
                 }]
             },
@@ -198,8 +197,6 @@ function criarGraficos() {
                         label: 'Tempo total na etapa',
                         data: [null, null, null, null],
                         backgroundColor: '#1b4332',
-                        borderColor: COR_REAL,
-                        borderWidth: 1.5,
                         borderRadius: 3
                     },
                     {
@@ -207,7 +204,6 @@ function criarGraficos() {
                         data: [null, null, null, null],
                         backgroundColor: '#3a7e45',
                         borderColor: COR_PLANEJADO,
-                        borderWidth: 1.5,
                         borderRadius: 3
                     }
                 ]
@@ -225,13 +221,36 @@ function criarGraficos() {
 }
 
 // ─────────────────────────────────────────────────────────
+// FETCH — ETAPA ATUAL (popula o select no header)
+// ─────────────────────────────────────────────────────────
+async function fetchEtapaAtual() {
+    try {
+        const stage = await apiFetch('/api/stage');
+        const select = document.getElementById('stage-select');
+        if (select) select.value = stage;
+    } catch(e) { console.error('stage:', e); }
+}
+
+// ─────────────────────────────────────────────────────────
+// MUDA ETAPA — chamado pelo onchange do select
+// ─────────────────────────────────────────────────────────
+async function mudarEtapa(novaEtapa) {
+    try {
+        await fetch('/api/stage', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ stage: novaEtapa })
+        });
+    } catch(e) { console.error('mudar etapa:', e); }
+}
+
+// ─────────────────────────────────────────────────────────
 // FETCH — KPIs INDIVIDUAIS
 // ─────────────────────────────────────────────────────────
 async function fetchKpisIndividuais() {
     // Última leitura
     try {
         const latest = await apiFetch('/api/readings/latest');
-        document.getElementById('stage-nome').textContent   = STAGE_PT[latest.stage] ?? latest.stage ?? '—';
         document.getElementById('kpi-liquid').textContent   = fmt(latest.liquidTemp)  + '°C';
         document.getElementById('kpi-ambient').textContent  = fmt(latest.ambientTemp) + '°C';
         document.getElementById('kpi-humidity').textContent = fmt(latest.humidity)    + '%';
@@ -269,19 +288,22 @@ async function fetchKpisIndividuais() {
 }
 
 // ─────────────────────────────────────────────────────────
-// FETCH — GRÁFICO HISTÓRICO 24H
+// FETCH — GRÁFICO HISTÓRICO 24H (janelas de 1h)
 // ─────────────────────────────────────────────────────────
 async function fetchHistorico() {
     try {
         const data = await apiFetch('/api/kpis/temperatura/historico');
 
-        const mapa = { '00h': 0, '04h': 1, '08h': 2, '12h': 3, '16h': 4, '20h': 5 };
-        const liquid  = new Array(7).fill(null);
-        const ambient = new Array(7).fill(null);
+        // Backend retorna janela = 0..23 (hora do dia em SP)
+        const liquid  = new Array(24).fill(null);
+        const ambient = new Array(24).fill(null);
 
         data.forEach(d => {
-            const idx = mapa[d.janela];
-            if (idx !== undefined) {
+            // janela pode vir como string "00h" (legado 4h) ou número 0..23 (novo 1h)
+            const idx = typeof d.janela === 'number'
+                ? d.janela
+                : parseInt(d.janela, 10);
+            if (idx >= 0 && idx < 24) {
                 liquid[idx]  = d.mediaLiquidTemp  != null ? +d.mediaLiquidTemp.toFixed(2)  : null;
                 ambient[idx] = d.mediaAmbientTemp != null ? +d.mediaAmbientTemp.toFixed(2) : null;
             }
@@ -406,5 +428,6 @@ async function atualizarTudo() {
 // INICIALIZAÇÃO
 // ─────────────────────────────────────────────────────────
 criarGraficos();
+fetchEtapaAtual();   // popula o select uma vez ao carregar
 atualizarTudo();
 setInterval(atualizarTudo, REFRESH_MS);
