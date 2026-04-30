@@ -91,7 +91,7 @@ public class AlertService {
             List<Reading> readings = readingRepository.findByStageOrderByTimestampDesc(reading.getStage());
             OffsetDateTime readingTimestamp = reading.getTimestamp();
 
-            for(Reading r : readings) { // itera a lista de leituras na mesma fase
+            for (Reading r : readings) { // itera a lista de leituras na mesma fase
                 if (checkRange(r.getStage(), r.getLiquidTemp())) {
                     readingTimestamp = r.getTimestamp(); // salva a data mais antiga onde a temperatura ficou fora de faixa
                 } else {

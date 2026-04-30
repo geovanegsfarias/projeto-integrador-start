@@ -5,4 +5,5 @@ public record EtapaDuracaoResponse(
         long duracaoRealMinutos,
         long duracaoMinPlanejadaMinutos,
         long duracaoMaxPlanejadaMinutos
-) {}
+) {
+}

@@ -145,9 +145,20 @@ body {
     font-weight: 600;
 }
 
-.status-indicator.normal { background: rgba(0, 255, 0, 0.2); color: #90EE90; }
-.status-indicator.warning { background: rgba(255, 193, 7, 0.2); color: #FFC107; }
-.status-indicator.critical { background: rgba(255, 0, 0, 0.2); color: #FF6B6B; }
+.status-indicator.normal {
+    background: rgba(0, 255, 0, 0.2);
+    color: #90EE90;
+}
+
+.status-indicator.warning {
+    background: rgba(255, 193, 7, 0.2);
+    color: #FFC107;
+}
+
+.status-indicator.critical {
+    background: rgba(255, 0, 0, 0.2);
+    color: #FF6B6B;
+}
 
 .logout-btn {
     background: transparent;
@@ -208,9 +219,20 @@ body {
     font-weight: 600;
 }
 
-.metric-status.normal { background: rgba(0, 255, 0, 0.2); color: #90EE90; }
-.metric-status.warning { background: rgba(255, 193, 7, 0.2); color: #FFC107; }
-.metric-status.critical { background: rgba(255, 0, 0, 0.2); color: #FF6B6B; }
+.metric-status.normal {
+    background: rgba(0, 255, 0, 0.2);
+    color: #90EE90;
+}
+
+.metric-status.warning {
+    background: rgba(255, 193, 7, 0.2);
+    color: #FFC107;
+}
+
+.metric-status.critical {
+    background: rgba(255, 0, 0, 0.2);
+    color: #FF6B6B;
+}
 
 .metric-value {
     font-size: 4rem;
@@ -243,9 +265,20 @@ body {
     margin-bottom: 1rem;
 }
 
-.status-bar.normal { background: rgba(0, 255, 0, 0.15); border: 2px solid rgba(0, 255, 0, 0.3); }
-.status-bar.warning { background: rgba(255, 193, 7, 0.15); border: 2px solid rgba(255, 193, 7, 0.3); }
-.status-bar.critical { background: rgba(255, 0, 0, 0.15); border: 2px solid rgba(255, 0, 0, 0.3); }
+.status-bar.normal {
+    background: rgba(0, 255, 0, 0.15);
+    border: 2px solid rgba(0, 255, 0, 0.3);
+}
+
+.status-bar.warning {
+    background: rgba(255, 193, 7, 0.15);
+    border: 2px solid rgba(255, 193, 7, 0.3);
+}
+
+.status-bar.critical {
+    background: rgba(255, 0, 0, 0.15);
+    border: 2px solid rgba(255, 0, 0, 0.3);
+}
 
 .alerts-card h3,
 .history-card h3 {
@@ -269,9 +302,17 @@ body {
     font-weight: bold;
 }
 
-.alert-item.normal .alert-icon { color: #90EE90; }
-.alert-item.warning .alert-icon { color: #FFC107; }
-.alert-item.critical .alert-icon { color: #FF6B6B; }
+.alert-item.normal .alert-icon {
+    color: #90EE90;
+}
+
+.alert-item.warning .alert-icon {
+    color: #FFC107;
+}
+
+.alert-item.critical .alert-icon {
+    color: #FF6B6B;
+}
 
 .chart-placeholder {
     height: 200px;
@@ -306,11 +347,18 @@ body {
     border-radius: 50%;
 }
 
-.dot.normal { background: #90EE90; }
-.dot.warning { background: #FFC107; }
-.dot.critical { background: #FF6B6B; }
+.dot.normal {
+    background: #90EE90;
+}
 
-/*Resp*/
+.dot.warning {
+    background: #FFC107;
+}
+
+.dot.critical {
+    background: #FF6B6B;
+}
+
 @media (max-width: 1024px) {
     .dashboard {
         grid-template-columns: 1fr;

@@ -5,4 +5,5 @@ import jakarta.validation.constraints.NotNull;
 
 public record StageRequest(
         @NotNull(message = "Beer Stage may not be null.") BeerStage stage
-) {}
+) {
+}

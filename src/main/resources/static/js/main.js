@@ -1,4 +1,3 @@
-
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 
@@ -22,8 +21,7 @@ window.addEventListener('scroll', () => {
     } else {
         header.classList.remove('scrolled');
     }
-    
-    /* Parallax effect for hero */
+
     const scrolled = window.pageYOffset;
     const heroBg = document.querySelector('.hero-bg');
     if (heroBg) {

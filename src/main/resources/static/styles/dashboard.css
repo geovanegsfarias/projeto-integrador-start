@@ -1,24 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap');
 
 :root {
-    --fonte-texto:  'Nunito', sans-serif;
+    --fonte-texto: 'Nunito', sans-serif;
     --fonte-titulo: 'Montserrat', sans-serif;
 
-    --ouro:         #DEB75B;
-    --ouro-dim:     #BF9341;
+    --ouro: #DEB75B;
+    --ouro-dim: #BF9341;
     --verde-header: #013824;
-    --verde-borda:  #2d6a4f;
+    --verde-borda: #2d6a4f;
 
     --cor-informacao: #3498db;
-    --cor-aviso:      #e67e22;
-    --cor-perigo:     #c0392b;
+    --cor-aviso: #e67e22;
+    --cor-perigo: #c0392b;
 
-    --card-bg:       rgba(10, 30, 18, 0.55);
-    --card-borda:    rgba(45, 106, 79, 0.5);
-    --titulo-bg:     rgba(1, 56, 36, 0.4);
+    --card-bg: rgba(10, 30, 18, 0.55);
+    --card-borda: rgba(45, 106, 79, 0.5);
+    --titulo-bg: rgba(1, 56, 36, 0.4);
 }
 
-*, *::before, *::after { box-sizing: border-box; }
+*, *::before, *::after {
+    box-sizing: border-box;
+}
 
 body {
     margin: 0;
@@ -58,7 +60,7 @@ body {
     font-family: var(--fonte-titulo);
     font-size: 0.8em;
     font-weight: 500;
-    color: rgba(255,255,255,0.6);
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .header-stage select {
@@ -85,14 +87,12 @@ body {
     color: #fff;
 }
 
-/* ── MAIN ── */
 .main {
     max-width: 1300px;
     margin: 0 auto;
     padding: 22px 20px;
 }
 
-/* ── MÉTRICAS ── */
 .primeira-linha {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -141,7 +141,6 @@ body {
     color: #e8f0eb;
 }
 
-/* ── GRID GRÁFICOS ── */
 .alinhamento-grafico {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -149,7 +148,6 @@ body {
     margin-bottom: 10px;
 }
 
-/* ── CARD GRÁFICO ── */
 .grafico-alerta {
     background: var(--card-bg);
     border: 1px solid var(--card-borda);
@@ -173,7 +171,6 @@ body {
     border-bottom: 1px solid rgba(45, 106, 79, 0.6);
 }
 
-/* ── CANVAS ── */
 .chart-container {
     position: relative;
     flex-grow: 1;
@@ -184,7 +181,6 @@ body {
     min-height: 220px;
 }
 
-/* ── LEGENDA ── */
 .legenda {
     font-family: var(--fonte-texto);
     display: flex;
@@ -204,12 +200,22 @@ body {
     border-radius: 2px;
 }
 
-.liquido   { background: #3498db; }
-.ambiente  { background: #e67e22; }
-.real      { background: var(--ouro); }
-.planejado { background: #2d6a4f; }
+.liquido {
+    background: #3498db;
+}
 
-/* ── LISTA DE ALERTAS ── */
+.ambiente {
+    background: #e67e22;
+}
+
+.real {
+    background: var(--ouro);
+}
+
+.planejado {
+    background: #2d6a4f;
+}
+
 .alerta-lista {
     flex-grow: 1;
     overflow-y: auto;
@@ -218,7 +224,7 @@ body {
 
 .alerta-carregando {
     font-family: var(--fonte-texto);
-    color: rgba(232,240,235,0.4);
+    color: rgba(232, 240, 235, 0.4);
     padding: 20px;
     text-align: center;
     font-size: 0.9rem;
@@ -244,7 +250,7 @@ body {
     white-space: nowrap;
     min-width: 38px;
     font-size: 12px;
-    color: rgba(232,240,235,0.5);
+    color: rgba(232, 240, 235, 0.5);
 }
 
 .alerta-tipo {
@@ -263,27 +269,52 @@ body {
     font-size: 12px;
 }
 
-.sev-WARNING  .alerta-hora,
-.sev-WARNING  .alerta-tipo  { color: var(--cor-aviso); }
+.sev-WARNING .alerta-hora,
+.sev-WARNING .alerta-tipo {
+    color: var(--cor-aviso);
+}
 
 .sev-CRITICAL .alerta-hora,
-.sev-CRITICAL .alerta-tipo  { color: var(--cor-perigo); }
+.sev-CRITICAL .alerta-tipo {
+    color: var(--cor-perigo);
+}
 
-.sev-INFO     .alerta-hora,
-.sev-INFO     .alerta-tipo  { color: var(--cor-informacao); }
+.sev-INFO .alerta-hora,
+.sev-INFO .alerta-tipo {
+    color: var(--cor-informacao);
+}
 
 .sev-SENSOR_FAIL .alerta-hora,
-.sev-SENSOR_FAIL .alerta-tipo { color: rgba(232,240,235,0.35); }
+.sev-SENSOR_FAIL .alerta-tipo {
+    color: rgba(232, 240, 235, 0.35);
+}
 
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(45,106,79,0.6); border-radius: 2px; }
+::-webkit-scrollbar {
+    width: 4px;
+}
 
-p { margin: 0; padding: 0; }
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(45, 106, 79, 0.6);
+    border-radius: 2px;
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
 
 @media (max-width: 900px) {
-    .alinhamento-grafico { grid-template-columns: 1fr; }
+    .alinhamento-grafico {
+        grid-template-columns: 1fr;
+    }
+
     .primeira-linha,
-    .segunda-linha       { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .segunda-linha {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
 }

@@ -15,21 +15,16 @@ import java.util.*;
 @Service
 public class KpiService {
 
-    private final ReadingRepository readingRepository;
-    private final AlertRepository alertRepository;
-
-    // Potência do forno: P = V * I = 220V, P = 1000W = 1kW
-    // Fórmula: E = P * T  →  kWh = 1.0 kW × horas ligado
     private static final double POTENCIA_KW = 1.0;
 
-    // Range planejado por etapa [minutos_min, minutos_max]
-    // Mashing: 60min | Boiling: 60-90min | Fermentation: 7-14 dias | Maturation: 14-30 dias
     private static final Map<BeerStage, long[]> DURACAO_PLANEJADA = Map.of(
-            BeerStage.MASHING,      new long[]{ 60L,    60L    },
-            BeerStage.BOILING,      new long[]{ 60L,    90L    },
-            BeerStage.FERMENTATION, new long[]{ 10080L, 20160L },
-            BeerStage.MATURATION,   new long[]{ 20160L, 43200L }
+            BeerStage.MASHING, new long[]{60L, 60L},
+            BeerStage.BOILING, new long[]{60L, 90L},
+            BeerStage.FERMENTATION, new long[]{10080L, 20160L},
+            BeerStage.MATURATION, new long[]{20160L, 43200L}
     );
+    private final ReadingRepository readingRepository;
+    private final AlertRepository alertRepository;
 
     @Autowired
     public KpiService(ReadingRepository readingRepository, AlertRepository alertRepository) {
@@ -37,26 +32,16 @@ public class KpiService {
         this.alertRepository = alertRepository;
     }
 
-    // -------------------------------------------------------------------------
-    // Desvio padrão — calculado pelo banco
-    // -------------------------------------------------------------------------
     public DesvioPadraoKpiResponse getDesvioPadrao() {
         Double result = readingRepository.findDesvioPadrao();
         return new DesvioPadraoKpiResponse(result != null ? result : 0.0);
     }
 
-    // -------------------------------------------------------------------------
-    // Conformidade — percentual calculado pelo banco em uma única query
-    // -------------------------------------------------------------------------
     public ConformidadeKpiResponse getConformidade() {
         Double result = readingRepository.findConformidadePercentual();
         return new ConformidadeKpiResponse(result != null ? result : 0.0);
     }
 
-    // -------------------------------------------------------------------------
-    // Energia — E = P × T, com P = 1kW (forno 220V / 1000W)
-    // Soma o tempo total de todas as etapas com leituras registradas
-    // -------------------------------------------------------------------------
     public EnergiaKpiResponse getEnergia() {
         double totalHoras = 0;
         for (Object[] row : readingRepository.findDuracaoPorEtapa()) {
@@ -67,10 +52,6 @@ public class KpiService {
         return new EnergiaKpiResponse(POTENCIA_KW * totalHoras);
     }
 
-    // -------------------------------------------------------------------------
-    // Gráfico de linha 24h — janelas de 1h (0..23), banco agrega a média
-    // Sempre retorna as 24 horas; horas sem dados chegam com null
-    // -------------------------------------------------------------------------
     public List<TemperaturaAgregadaResponse> getHistoricoTemperatura() {
         Map<Integer, Object[]> porJanela = new HashMap<>();
         for (Object[] row : readingRepository.findMediaTemperaturaAgregada24h()) {
@@ -95,10 +76,6 @@ public class KpiService {
         return resultado;
     }
 
-    // -------------------------------------------------------------------------
-    // Gráfico de coluna — média por etapa
-    // Garante as 4 etapas no retorno mesmo sem leituras (null = sem dados ainda)
-    // -------------------------------------------------------------------------
     public List<MediaPorEtapaResponse> getMediaTemperaturaPorEtapa() {
         Map<BeerStage, Double> porEtapa = new EnumMap<>(BeerStage.class);
         for (Object[] row : readingRepository.findAvgLiquidTempByStage()) {
@@ -112,10 +89,6 @@ public class KpiService {
                 .toList();
     }
 
-    // -------------------------------------------------------------------------
-    // Gráfico de colunas — alertas por severidade
-    // Uma query GROUP BY no banco ao invés de chamadas separadas
-    // -------------------------------------------------------------------------
     public AlertasKpiResponse getAlertasPorSeveridade() {
         Map<AlertSeverity, Long> counts = new EnumMap<>(AlertSeverity.class);
         for (Object[] row : alertRepository.countGroupBySeverity()) {
@@ -129,14 +102,10 @@ public class KpiService {
         );
     }
 
-    // -------------------------------------------------------------------------
-    // Gráfico real vs planejado — sempre retorna as 4 etapas
-    // Etapas sem leituras ainda aparecem com duracaoReal = 0
-    // -------------------------------------------------------------------------
     public List<EtapaDuracaoResponse> getEtapasDuracao() {
         Map<BeerStage, Long> duracaoReal = new EnumMap<>(BeerStage.class);
         for (Object[] row : readingRepository.findDuracaoPorEtapa()) {
-            BeerStage stage    = (BeerStage) row[0];
+            BeerStage stage = (BeerStage) row[0];
             OffsetDateTime min = (OffsetDateTime) row[1];
             OffsetDateTime max = (OffsetDateTime) row[2];
             duracaoReal.put(stage, Duration.between(min, max).toMinutes());

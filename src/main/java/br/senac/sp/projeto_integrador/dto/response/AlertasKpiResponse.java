@@ -5,4 +5,5 @@ public record AlertasKpiResponse(
         long warning,
         long critical,
         long sensorFail
-) {}
+) {
+}

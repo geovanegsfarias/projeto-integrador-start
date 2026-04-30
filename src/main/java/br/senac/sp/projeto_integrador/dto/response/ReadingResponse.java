@@ -10,6 +10,5 @@ public record ReadingResponse(Long id,
                               double liquidTemp,
                               double humidity,
                               BeerStage stage,
-                              String deviceId)
-{
+                              String deviceId) {
 }

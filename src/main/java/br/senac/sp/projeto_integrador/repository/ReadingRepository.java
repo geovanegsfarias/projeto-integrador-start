@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface ReadingRepository extends JpaRepository<Reading, Long> {
 
     Optional<Reading> findTopByOrderByTimestampDesc();
+
     List<Reading> findByStageOrderByTimestampDesc(BeerStage stage);
 
     @Query("SELECT r.stage, AVG(r.liquidTemp) FROM Reading r GROUP BY r.stage")
@@ -21,7 +22,6 @@ public interface ReadingRepository extends JpaRepository<Reading, Long> {
     @Query(value = "SELECT STDDEV(liquid_temp)::float8 FROM readings", nativeQuery = true)
     Double findDesvioPadrao();
 
-    // Conformidade
     @Query(value = """
             SELECT
               COUNT(CASE
@@ -34,7 +34,6 @@ public interface ReadingRepository extends JpaRepository<Reading, Long> {
             """, nativeQuery = true)
     Double findConformidadePercentual();
 
-    // Duração por etapa
     @Query("SELECT r.stage, MIN(r.timestamp), MAX(r.timestamp) FROM Reading r GROUP BY r.stage")
     List<Object[]> findDuracaoPorEtapa();
 

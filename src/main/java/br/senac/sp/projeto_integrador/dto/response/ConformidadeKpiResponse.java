@@ -1,3 +1,4 @@
 package br.senac.sp.projeto_integrador.dto.response;
 
-public record ConformidadeKpiResponse(double percentual) {}
+public record ConformidadeKpiResponse(double percentual) {
+}

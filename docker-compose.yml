@@ -12,6 +12,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/projeto_integrador_db
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - MQTT_BROKER_URL=tcp://host.docker.internal:1883
+      - MQTT_TOPIC=cerveja/dados
     ports:
       - "8080:8080"
 

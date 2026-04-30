@@ -1,2 +1,2 @@
 ALTER TABLE alerts
-ALTER COLUMN reading_id DROP NOT NULL;
+    ALTER COLUMN reading_id DROP NOT NULL;

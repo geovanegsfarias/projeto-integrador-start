@@ -31,7 +31,7 @@ body {
     background-color: rgba(32, 32, 32, 0.4);
 }
 
-.bebas{
+.bebas {
     font-family: "Bebas Neue", sans-serif;
     letter-spacing: 0.1rem;
 }
@@ -108,7 +108,7 @@ body {
 }
 
 .ptitle {
-    font-size: 3.6rem!important;
+    font-size: 3.6rem !important;
     color: #fac750;
     margin-bottom: 0.5rem;
     font-weight: bold;
@@ -122,9 +122,9 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-background: url('../img/edit2up.png') no-repeat center/cover fixed;
+    background: url('../img/edit2up.png') no-repeat center/cover fixed;
     animation: sparkle 20s linear infinite;
-    
+
 }
 
 .hero-content {
@@ -184,8 +184,8 @@ background: url('../img/edit2up.png') no-repeat center/cover fixed;
     z-index: 10;
 }
 
-.num{
-    text-align: center; 
+.num {
+    text-align: center;
     align-items: center;
     padding-top: 19px;
     font-size: 1.7rem;
